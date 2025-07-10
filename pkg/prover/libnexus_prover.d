@@ -1,0 +1,1 @@
+/root/vscode-remote/nexus-cli/clients/prover-lib/target/release/libnexus_prover.a: /root/vscode-remote/nexus-cli/clients/prover-lib/assets/fib_input /root/vscode-remote/nexus-cli/clients/prover-lib/assets/fib_input_initial /root/vscode-remote/nexus-cli/clients/prover-lib/build.rs /root/vscode-remote/nexus-cli/clients/prover-lib/src/lib.rs
