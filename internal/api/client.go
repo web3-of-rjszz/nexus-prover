@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"crypto/ed25519"
+	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -248,14 +249,29 @@ func (c *Client) FetchTaskBatch(nodeID string, pub ed25519.PublicKey, batchSize 
 
 // SubmitProof 提交证明（protobuf POST）
 func (c *Client) SubmitProof(task *types.Task, proof []byte, priv ed25519.PrivateKey) error {
-	// 这里仅为示例，实际应构造 SubmitProofRequest 并签名
+	// 计算证明哈希
+	proofHash := fmt.Sprintf("%x", sha256.Sum256(proof))
+
+	// 构造签名数据: task_id + proof_hash
+	signData := []byte(task.TaskID + proofHash)
+
+	// 使用私钥签名
+	signature := ed25519.Sign(priv, signData)
+
+	// 构造完整的 SubmitProofRequest
 	req := &pb.SubmitProofRequest{
 		TaskId:           task.TaskID,
 		NodeType:         pb.NodeType_CLI_PROVER,
+		ProofHash:        proofHash,
 		Proof:            proof,
 		Ed25519PublicKey: priv.Public().(ed25519.PublicKey),
-		// 其它字段根据 proto 定义补全
+		Signature:        signature,
+		// 添加节点遥测数据（可选）
+		NodeTelemetry: &pb.NodeTelemetry{
+			Location: &[]string{"unknown"}[0],
+		},
 	}
+
 	data, err := proto.Marshal(req)
 	if err != nil {
 		return err

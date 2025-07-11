@@ -107,7 +107,7 @@ func main() {
 	utils.LogWithTime("📦 任务队列已创建 (容量: %d), 提交失败重试队列容量: %d", cfg.TaskQueueCapacity, 100)
 
 	utils.LogWithTime("🔄 防止任务获取限速, 等待3分钟...")
-	utils.SleepWithContext(ctx, time.Duration(3)*time.Minute) // 为防止任务获取限速，让worker等待3分钟
+	// utils.SleepWithContext(ctx, time.Duration(3)*time.Minute) // 为防止任务获取限速，让worker等待3分钟
 
 	// 启动任务获取worker
 	wg.Add(1)
