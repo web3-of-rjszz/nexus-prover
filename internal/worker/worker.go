@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"fmt"
+	"math/rand"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -27,6 +28,14 @@ const STATS_INTERVAL = 60
 func incFetched()   { atomic.AddInt64(&totalFetched, 1) }
 func incProved()    { atomic.AddInt64(&totalProved, 1) }
 func incSubmitted() { atomic.AddInt64(&totalSubmitted, 1) }
+
+func GetRandom(max int) int {
+	// 设置随机种子（基于当前时间纳秒值）
+	rand.Seed(time.Now().UnixNano()) // [1,2,5](@ref)
+
+	// 生成 [0, 30) 的随机整数
+	return rand.Intn(max) // 0 ≤ 随机数 < 30 [1,6](@ref)
+}
 
 // GetStats 获取当前统计数据的副本
 func GetStats() (int64, int64, int64) {
@@ -155,7 +164,7 @@ func ProverWorker(ctx context.Context, id int, priv ed25519.PrivateKey, taskQueu
 			taskQueue.MarkProcessed()
 
 			// 提交证明
-			utils.SleepWithContext(ctx, time.Duration(waitSecond)*time.Second) // 计算太快了，提交证明前等待8秒，避免提交过快
+			utils.SleepWithContext(ctx, time.Duration(GetRandom(waitSecond))*time.Second) // 计算太快了，提交证明前等待8秒，避免提交过快
 			err = apiClient.SubmitProof(task, proof, priv)
 			if err != nil {
 				if strings.Contains(err.Error(), "NotFoundError") &&

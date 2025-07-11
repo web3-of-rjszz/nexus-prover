@@ -225,7 +225,7 @@ func printHelp() {
 	fmt.Println("    \"wallet_address\": \"钱包地址\",       # 可以不填")
 	fmt.Println("    \"request_delay\": 0,")
 	fmt.Println("    \"prover_workers\": 9,")
-	fmt.Println("    \"task_queue_capacity\": 1000")
+	fmt.Println("    \"task_queue_capacity\": 1000,")
 	fmt.Println("    \"prover_submit_wait_second\": 10")
 	fmt.Println("  }")
 	fmt.Println("")
