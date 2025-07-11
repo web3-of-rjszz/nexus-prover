@@ -114,10 +114,13 @@ func TaskFetcher(ctx context.Context, nodeIDs []string, pub ed25519.PublicKey, t
 }
 
 // ProverWorker 证明计算worker - 从队列获取任务进行计算和提交
-func ProverWorker(ctx context.Context, id int, priv ed25519.PrivateKey, taskQueue *types.TaskQueue, wg *sync.WaitGroup) {
+func ProverWorker(ctx context.Context, id int, priv ed25519.PrivateKey, taskQueue *types.TaskQueue, waitSecond int, wg *sync.WaitGroup) {
 	defer wg.Done()
 	utils.LogWithTime("[prover-%d] 开始证明计算", id)
-
+	// 默认10s
+	if waitSecond == 0 {
+		waitSecond = 10
+	}
 	apiClient := api.NewClient()
 
 	for {
@@ -152,7 +155,7 @@ func ProverWorker(ctx context.Context, id int, priv ed25519.PrivateKey, taskQueu
 			taskQueue.MarkProcessed()
 
 			// 提交证明
-			utils.SleepWithContext(ctx, time.Duration(8)*time.Second) // 计算太快了，提交证明前等待8秒，避免提交过快
+			utils.SleepWithContext(ctx, time.Duration(waitSecond)*time.Second) // 计算太快了，提交证明前等待8秒，避免提交过快
 			err = apiClient.SubmitProof(task, proof, priv)
 			if err != nil {
 				if strings.Contains(err.Error(), "NotFoundError") &&

@@ -7,12 +7,13 @@ import (
 
 // Config 配置结构体
 type Config struct {
-	NodeIDs           []string `json:"node_ids"` // 节点ID数组
-	UserID            string   `json:"user_id"`
-	WalletAddress     string   `json:"wallet_address"`
-	RequestDelay      int      `json:"request_delay"`       // 请求间隔（秒）
-	ProverWorkers     int      `json:"prover_workers"`      // 证明计算worker数量
-	TaskQueueCapacity int      `json:"task_queue_capacity"` // 任务队列容量
+	NodeIDs                []string `json:"node_ids"` // 节点ID数组
+	UserID                 string   `json:"user_id"`
+	WalletAddress          string   `json:"wallet_address"`
+	RequestDelay           int      `json:"request_delay"`             // 请求间隔（秒）
+	ProverWorkers          int      `json:"prover_workers"`            // 证明计算worker数量
+	ProverSubmitWaitSecond int      `json:"prover_submit_wait_second"` // 证明提交等待时间
+	TaskQueueCapacity      int      `json:"task_queue_capacity"`       // 任务队列容量
 }
 
 // 常量定义

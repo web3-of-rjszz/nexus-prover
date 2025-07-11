@@ -145,7 +145,7 @@ func main() {
 			wg.Add(1)
 			utils.LogWithTime("🔧 启动证明计算worker-%d", i)
 			go func(workerID int) {
-				worker.ProverWorker(ctx, workerID, priv, taskQueue, &wg)
+				worker.ProverWorker(ctx, workerID, priv, taskQueue, cfg.ProverSubmitWaitSecond, &wg)
 			}(i)
 		}
 	}
@@ -226,6 +226,7 @@ func printHelp() {
 	fmt.Println("    \"request_delay\": 0,")
 	fmt.Println("    \"prover_workers\": 9,")
 	fmt.Println("    \"task_queue_capacity\": 1000")
+	fmt.Println("    \"prover_submit_wait_second\": 10")
 	fmt.Println("  }")
 	fmt.Println("")
 }
